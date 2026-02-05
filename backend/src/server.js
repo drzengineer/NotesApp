@@ -10,7 +10,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const app = express();
 
-app.use(helmet);
+app.use(helmet());
 app.use(
 	cors({
 		origin: FRONTEND_URL,
