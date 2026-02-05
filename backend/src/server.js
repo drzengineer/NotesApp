@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import connectDB from "./config/db.js";
-import limiter from "./middleware/ratelimiter.js";
+import limiter from "./middleware/rateLimiter.js";
 import notesRoutes from "./routes/notesRoutes.js";
 
 const PORT = process.env.PORT;
