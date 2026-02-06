@@ -16,7 +16,7 @@ const NoteDetailPage = () => {
 	useEffect(() => {
 		const fetchNote = async () => {
 			try {
-				const res = await api.get(`/notes/${id}`);
+				const res = await api.get(`api/notes/${id}`);
 				setNote(res.data);
 			} catch (error) {
 				if (error.response.status === 429) {
@@ -40,7 +40,7 @@ const NoteDetailPage = () => {
 		if (!window.confirm("Are you sure you want to delete this note?")) return;
 
 		try {
-			await api.delete(`/notes/${id}`);
+			await api.delete(`api/notes/${id}`);
 			toast.success("Note deleted Successfully");
 			navigate("/");
 		} catch (error) {
@@ -64,7 +64,7 @@ const NoteDetailPage = () => {
 		setSaving(true);
 
 		try {
-			await api.put(`/notes/${id}`, note);
+			await api.put(`api/notes/${id}`, note);
 			toast.success("Note updated Successfully");
 			navigate("/");
 		} catch (error) {
