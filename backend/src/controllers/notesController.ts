@@ -1,6 +1,7 @@
+import type { Request, Response } from "express";
 import Note from "../models/Note.js";
 
-export async function getAllNotes(_req, res) {
+export async function getAllNotes(_req: Request, res: Response) {
 	try {
 		const notes = await Note.find().sort({ createdAt: -1 });
 		res.status(200).json(notes);
@@ -10,7 +11,7 @@ export async function getAllNotes(_req, res) {
 	}
 }
 
-export async function getNotebyID(req, res) {
+export async function getNotebyID(req: Request, res: Response) {
 	try {
 		const note = await Note.findById(req.params.id);
 		if (!note) res.status(404).json({ message: "Note not found!" });
@@ -21,7 +22,7 @@ export async function getNotebyID(req, res) {
 	}
 }
 
-export async function createNote(req, res) {
+export async function createNote(req: Request, res: Response) {
 	try {
 		const { title, content } = req.body;
 		const note = new Note({ title, content });
@@ -34,7 +35,7 @@ export async function createNote(req, res) {
 	}
 }
 
-export async function updateNote(req, res) {
+export async function updateNote(req: Request, res: Response) {
 	try {
 		const { title, content } = req.body;
 		const updatedNote = await Note.findByIdAndUpdate(
@@ -53,7 +54,7 @@ export async function updateNote(req, res) {
 	}
 }
 
-export async function deleteNote(req, res) {
+export async function deleteNote(req: Request, res: Response) {
 	try {
 		const deletedNote = await Note.findByIdAndDelete(req.params.id);
 		if (!deletedNote)

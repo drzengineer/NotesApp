@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 
-const noteSchema = new mongoose.Schema(
+interface INote {
+	title: string;
+	content: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+const noteSchema = new mongoose.Schema<INote>(
 	{
 		title: {
 			type: String,
@@ -14,6 +21,6 @@ const noteSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-const Note = mongoose.model("Note", noteSchema);
+const Note = mongoose.model<INote>("Note", noteSchema);
 
 export default Note;
