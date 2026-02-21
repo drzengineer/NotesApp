@@ -1,11 +1,13 @@
+import axios from "axios";
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router";
 import api from "../lib/axios";
+import type { Note } from "../types";
 
 const NoteDetailPage = () => {
-	const [note, setNote] = useState(null);
+	const [note, setNote] = useState<Note | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
 
@@ -16,10 +18,10 @@ const NoteDetailPage = () => {
 	useEffect(() => {
 		const fetchNote = async () => {
 			try {
-				const res = await api.get(`api/notes/${id}`);
+				const res = await api.get(`/notes/${id}`);
 				setNote(res.data);
 			} catch (error) {
-				if (error.response.status === 429) {
+				if (axios.isAxiosError(error) && error.response?.status === 429) {
 					toast.error("Slow down! You're too fast.", {
 						duration: 4000,
 						icon: "💀",
@@ -40,11 +42,11 @@ const NoteDetailPage = () => {
 		if (!window.confirm("Are you sure you want to delete this note?")) return;
 
 		try {
-			await api.delete(`api/notes/${id}`);
+			await api.delete(`/notes/${id}`);
 			toast.success("Note deleted Successfully");
 			navigate("/");
 		} catch (error) {
-			if (error.response.status === 429) {
+			if (axios.isAxiosError(error) && error.response?.status === 429) {
 				toast.error("Slow down! You're too fast.", {
 					duration: 4000,
 					icon: "💀",
@@ -56,6 +58,7 @@ const NoteDetailPage = () => {
 		}
 	};
 	const handleSave = async () => {
+		if (!note) return;
 		if (!note.title.trim() || !note.content.trim()) {
 			toast.error("All fields are required");
 			return;
@@ -64,11 +67,11 @@ const NoteDetailPage = () => {
 		setSaving(true);
 
 		try {
-			await api.put(`api/notes/${id}`, note);
+			await api.put(`/notes/${id}`, note);
 			toast.success("Note updated Successfully");
 			navigate("/");
 		} catch (error) {
-			if (error.response.status === 429) {
+			if (axios.isAxiosError(error) && error.response?.status === 429) {
 				toast.error("Slow down! You're too fast.", {
 					duration: 4000,
 					icon: "💀",
@@ -89,6 +92,7 @@ const NoteDetailPage = () => {
 			</div>
 		);
 	}
+	if (!note) return null;
 
 	return (
 		<div className="min-h-screen relative bg-base-200">
@@ -138,7 +142,7 @@ const NoteDetailPage = () => {
 									disabled={saving}
 									onClick={handleSave}
 								>
-									{saving ? "Saving..." : "Saving Changes"}
+									{saving ? "Saving..." : "Save Changes"}
 								</button>
 							</div>
 						</div>

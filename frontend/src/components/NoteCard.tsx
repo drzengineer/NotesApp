@@ -3,14 +3,20 @@ import toast from "react-hot-toast";
 import { Link } from "react-router";
 import api from "../lib/axios";
 import { formatDate } from "../lib/utils";
+import type { Note } from "../types";
 
-const NoteCard = ({ note, setNotes }) => {
-	const handleDelete = async (e, id) => {
+interface NoteCardProps {
+	note: Note;
+	setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
+}
+
+const NoteCard = ({ note, setNotes }: NoteCardProps) => {
+	const handleDelete = async (e: React.MouseEvent, id: string) => {
 		e.preventDefault();
-		if (!window.confirm("Are you sure you want to delte this note?"));
+		if (!window.confirm("Are you sure you want to delete this note?")) return;
 		try {
-			await api.delete(`api/notes/${id}`);
-			setNotes((prev) => prev.filter((note) => note._id !== id));
+			await api.delete(`/notes/${id}`);
+			setNotes((prev) => prev.filter((n) => n._id !== id));
 			toast.success("Note deleted successfully");
 		} catch (error) {
 			console.log("Error in handleDelete", error);
