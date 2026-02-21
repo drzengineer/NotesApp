@@ -20,6 +20,7 @@ Managing notes across devices typically requires either bulky desktop software o
 - ✅ **Production deployment** — live at a custom domain with separate frontend/backend services
 - ✅ **Automated CI/CD** — auto-deploys on every push to `main`
 - ✅ **Security middleware** — CORS configuration, rate limiting, environment variable management
+- ✅ **TypeScript** — strict mode end-to-end across frontend and backend
 - 🔧 **Authentication** — JWT-based user auth currently in active development
 
 -----
@@ -46,26 +47,26 @@ Managing notes across devices typically requires either bulky desktop software o
 
 ## Tech Stack
 
-|Layer     |Technology                                       |
-|----------|-------------------------------------------------|
-|Frontend  |React.js, Vite, Tailwind CSS                     |
-|Backend   |Node.js, Express.js                              |
-|Database  |MongoDB, MongoDB Atlas, Mongoose ODM             |
-|Deployment|Render (static site + web service), custom domain|
-|DevOps    |Git, GitHub, CI/CD via Render integration        |
-|Security  |CORS, rate limiting, environment variables       |
+| Layer      | Technology                                                        |
+|------------|-------------------------------------------------------------------|
+| Frontend   | React.js, Vite, TypeScript, Tailwind CSS, DaisyUI                 |
+| Backend    | Node.js, Express.js, TypeScript                                   |
+| Database   | MongoDB, MongoDB Atlas, Mongoose ODM                              |
+| Deployment | Render (static site + web service), custom domain                 |
+| DevOps     | Git, GitHub, CI/CD via Render integration                         |
+| Security   | CORS, rate limiting, environment variables                        |
 
 -----
 
 ## API Endpoints
 
-|Method  |Endpoint        |Description            |
-|--------|----------------|-----------------------|
-|`GET`   |`/api/notes`    |Retrieve all notes     |
-|`GET`   |`/api/notes/:id`|Retrieve a single note |
-|`POST`  |`/api/notes`    |Create a new note      |
-|`PUT`   |`/api/notes/:id`|Update an existing note|
-|`DELETE`|`/api/notes/:id`|Delete a note          |
+| Method   | Endpoint         | Description             |
+|----------|------------------|-------------------------|
+| `GET`    | `/api/notes`     | Retrieve all notes      |
+| `GET`    | `/api/notes/:id` | Retrieve a single note  |
+| `POST`   | `/api/notes`     | Create a new note       |
+| `PUT`    | `/api/notes/:id` | Update an existing note |
+| `DELETE` | `/api/notes/:id` | Delete a note           |
 
 -----
 
@@ -104,8 +105,14 @@ Create a `.env` file in the `/backend` directory:
 
 ```env
 MONGO_URI=your_mongodb_atlas_connection_string
-PORT=5000
-NODE_ENV=development
+PORT=5001
+FRONTEND_URL=http://localhost:5173
+```
+
+Create a `.env` file in the `/frontend` directory:
+
+```env
+VITE_API_URL=http://localhost:5001/api
 ```
 
 ### Run Locally
@@ -113,7 +120,7 @@ NODE_ENV=development
 **Backend** (from `/backend`):
 
 ```bash
-npm start
+npm run dev
 ```
 
 **Frontend** (from `/frontend`):
@@ -122,7 +129,23 @@ npm start
 npm run dev
 ```
 
-Frontend runs on `http://localhost:5173` — backend on `http://localhost:5000`.
+Frontend runs on `http://localhost:5173` — backend on `http://localhost:5001`.
+
+### Type Checking
+
+Run the TypeScript compiler in check-only mode (no output emitted):
+
+**Backend:**
+```bash
+cd backend
+npm run typecheck
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run typecheck
+```
 
 -----
 
@@ -131,15 +154,22 @@ Frontend runs on `http://localhost:5173` — backend on `http://localhost:5000`.
 ```
 NotesApp/
 ├── backend/
-│   ├── models/          # Mongoose schemas
-│   ├── routes/          # Express route handlers
-│   ├── middleware/       # CORS, rate limiting, error handling
-│   └── server.js        # App entry point
+│   ├── src/
+│   │   ├── models/        # Mongoose schemas
+│   │   ├── routes/        # Express route handlers
+│   │   ├── middleware/    # CORS, rate limiting, error handling
+│   │   └── server.ts      # App entry point
+│   ├── dist/              # Compiled JavaScript output
+│   └── tsconfig.json
 ├── frontend/
 │   ├── src/
-│   │   ├── components/  # React components
-│   │   └── App.jsx      # Root component
-│   └── index.html
+│   │   ├── components/    # React components
+│   │   ├── pages/         # Page-level components
+│   │   ├── lib/           # Axios instance, utilities
+│   │   ├── types.ts       # Shared TypeScript interfaces
+│   │   └── App.tsx        # Root component
+│   ├── index.html
+│   └── tsconfig.json
 └── .gitignore
 ```
 
@@ -154,7 +184,7 @@ Both services are deployed on **Render**:
 - **Database** → MongoDB Atlas (cloud-hosted, separate from Render)
 - **Domain** → Custom domain configured at [notes.davidr.io](https://notes.davidr.io)
 
-CI/CD is handled entirely through Render’s GitHub integration — no manual deploys needed.
+CI/CD is handled entirely through Render's GitHub integration — no manual deploys needed.
 
 -----
 
@@ -164,8 +194,8 @@ CI/CD is handled entirely through Render’s GitHub integration — no manual de
 - [x] Cloud deployment with custom domain
 - [x] Automated CI/CD pipeline
 - [x] Rate limiting & CORS security
+- [x] TypeScript migration (strict mode, frontend + backend)
 - [ ] JWT authentication & protected routes
-- [ ] TypeScript migration
 - [ ] Jest unit tests (target 70%+ coverage)
 - [ ] Docker containerization
 - [ ] Redis caching
