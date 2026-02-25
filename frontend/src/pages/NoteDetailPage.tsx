@@ -112,7 +112,7 @@ const NoteDetailPage = () => {
 							Delete Note
 						</button>
 					</div>
-					<div className="card border-y-2 border-gradient-blue-cyan border-transparent">
+					<div className="card border border-gradient-blue-cyan border-transparent">
 						<div className="card-body">
 							<fieldset className="fieldset mb-4">
 								<legend className="fieldset-legend">Title</legend>

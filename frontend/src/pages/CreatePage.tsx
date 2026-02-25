@@ -50,7 +50,7 @@ const CreatePage = () => {
 						<ArrowLeftIcon className="size-5" />
 						Back to Notes
 					</Link>
-					<div className="card border-y-2 border-gradient-blue-cyan border-transparent">
+					<div className="card border border-gradient-blue-cyan border-transparent">
 						<div className="card-body">
 							<h2 className="card-title text-2xl mb-4">Create New Note</h2>
 							<form onSubmit={handleSubmit}>
