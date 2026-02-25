@@ -43,14 +43,14 @@ const CreatePage = () => {
 	};
 
 	return (
-		<div className=" relative min-h-screen bg-base-200">
+		<div className=" relative min-h-screen bg-base-300">
 			<div className="container mx-auto px-4 py-8">
 				<div className="max-w-2xl mx-auto">
 					<Link to={"/"} className="btn btn-ghost mb-6">
 						<ArrowLeftIcon className="size-5" />
 						Back to Notes
 					</Link>
-					<div className="card bg-base-100">
+					<div className="card border-y-2 border-gradient-blue-cyan border-transparent">
 						<div className="card-body">
 							<h2 className="card-title text-2xl mb-4">Create New Note</h2>
 							<form onSubmit={handleSubmit}>
@@ -58,7 +58,7 @@ const CreatePage = () => {
 									<legend className="fieldset-legend">Title</legend>
 									<input
 										type="text"
-										className="input w-auto"
+										className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]"
 										placeholder="Note Title"
 										value={title}
 										onChange={(e) => setTitle(e.target.value)}
@@ -68,7 +68,7 @@ const CreatePage = () => {
 									<legend className="fieldset-legend">Content</legend>
 									<textarea
 										placeholder="Write your note here..."
-										className="textarea textarea-bordered h-32 w-auto"
+										className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#151515] to-[#171717]"
 										value={content}
 										onChange={(e) => setContent(e.target.value)}
 									/>
@@ -76,7 +76,7 @@ const CreatePage = () => {
 								<div className="card-actions justify-end">
 									<button
 										type="submit"
-										className="btn btn-primary"
+										className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent"
 										disabled={loading}
 									>
 										{loading ? "Creating..." : "Create Note"}

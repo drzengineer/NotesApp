@@ -87,7 +87,7 @@ const NoteDetailPage = () => {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-base-200 flex items-center justify-center">
+			<div className="min-h-screen bg-base-300 flex items-center justify-center">
 				<LoaderIcon className="animate-spin size-10" />
 			</div>
 		);
@@ -95,7 +95,7 @@ const NoteDetailPage = () => {
 	if (!note) return null;
 
 	return (
-		<div className="min-h-screen relative bg-base-200">
+		<div className="min-h-screen relative bg-base-300">
 			<div className="container mx-auto px-4 py-8">
 				<div className="max-w-2xl mx-auto">
 					<div className="flex items-center justify-between mb-6">
@@ -112,14 +112,14 @@ const NoteDetailPage = () => {
 							Delete Note
 						</button>
 					</div>
-					<div className="card bg-base-100">
+					<div className="card border-y-2 border-gradient-blue-cyan border-transparent">
 						<div className="card-body">
 							<fieldset className="fieldset mb-4">
 								<legend className="fieldset-legend">Title</legend>
 								<input
 									type="text"
 									placeholder="Note title"
-									className="input w-auto"
+									className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]"
 									value={note.title}
 									onChange={(e) => setNote({ ...note, title: e.target.value })}
 								/>
@@ -128,7 +128,7 @@ const NoteDetailPage = () => {
 								<legend className="fieldset-legend">Content</legend>
 								<textarea
 									placeholder="Write your note here..."
-									className="textarea textarea-bordered h-32 w-auto"
+									className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#151515] to-[#171717]"
 									value={note.content}
 									onChange={(e) =>
 										setNote({ ...note, content: e.target.value })
@@ -138,7 +138,7 @@ const NoteDetailPage = () => {
 							<div className="card-actions justify-end">
 								<button
 									type="button"
-									className="btn btn-primary"
+									className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent"
 									disabled={saving}
 									onClick={handleSave}
 								>

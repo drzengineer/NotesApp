@@ -26,7 +26,7 @@ const NoteCard = ({ note, setNotes }: NoteCardProps) => {
 	return (
 		<Link
 			to={`/note/${note._id}`}
-			className="card bg-base-100 hover:shadow-lg transition-all duration-200 border-t-4 border-solid border-[#00FF9D]"
+			className="card hover:shadow-lg transition-all duration-200 border-y-3  border-gradient-blue-cyan border-transparent"
 		>
 			<div className="card-body">
 				<h3 className="card-title text-base-content">{note.title}</h3>
@@ -51,3 +51,7 @@ const NoteCard = ({ note, setNotes }: NoteCardProps) => {
 	);
 };
 export default NoteCard;
+
+//bg-[linear-gradient(180deg,_#0f1026_29%,_#1b2040_100%)]
+
+//bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
