@@ -55,6 +55,8 @@ export default function NoteDetailPage() {
 			if (!res.ok) throw new Error("Failed to delete note");
 			toast.success("Note deleted successfully");
 			router.push("/");
+			router.push("/");
+			setTimeout(() => router.refresh(), 100);
 		} catch (error) {
 			console.error("Error deleting note:", error);
 			toast.error("Failed to delete note");
@@ -85,6 +87,8 @@ export default function NoteDetailPage() {
 			if (!res.ok) throw new Error("Failed to save note");
 			toast.success("Note updated successfully");
 			router.push("/");
+			router.push("/");
+			setTimeout(() => router.refresh(), 100);
 		} catch (error) {
 			console.error("Error updating note:", error);
 			toast.error("Failed to save note");
