@@ -40,7 +40,6 @@ export default function CreatePage() {
 
 			toast.success("Note created successfully");
 			router.push("/");
-			router.refresh();
 		} catch (error) {
 			console.error("Error creating note", error);
 			toast.error("Failed to create note");

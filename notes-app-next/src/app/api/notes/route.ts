@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Note from "@/lib/Note";
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
 		const { title, content } = await req.json();
 		const note = new Note({ title, content });
 		const savedNote = await note.save();
+		revalidatePath("/");
 		return NextResponse.json(savedNote, { status: 201 });
 	} catch (error) {
 		console.error("Error in POST /api/notes/", error);

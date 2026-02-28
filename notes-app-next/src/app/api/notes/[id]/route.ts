@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Note from "@/lib/Note";
@@ -33,6 +34,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 		);
 		if (!updatedNote)
 			return NextResponse.json({ message: "Note not found" }, { status: 404 });
+		revalidatePath("/");
 		return NextResponse.json(updatedNote, { status: 200 });
 	} catch (error) {
 		console.error("Error in PUT /api/notes/[id]", error);
@@ -50,6 +52,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 		const deletedNote = await Note.findByIdAndDelete(id);
 		if (!deletedNote)
 			return NextResponse.json({ message: "Note not found" }, { status: 404 });
+		revalidatePath("/");
 		return NextResponse.json(deletedNote, { status: 200 });
 	} catch (error) {
 		console.error("Error in DELETE /api/notes/[id]", error);
