@@ -1,13 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-const requests = new Map<string, { count: number; resetTime: number }>();
+export const requests = new Map<string, { count: number; resetTime: number }>();
 
 const WINDOW_MS = 10000;
 const MAX_REQUESTS = 10;
 
 export function proxy(request: NextRequest) {
-	const ip =
-		request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
+	const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
 	const now = Date.now();
 
 	const record = requests.get(ip);
