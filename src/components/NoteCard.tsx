@@ -26,12 +26,11 @@ export default function NoteCard({ note }: NoteCardProps) {
 				});
 				return;
 			}
-			if (!res.ok) throw new Error("Failed to delete");
+			if (!res.ok) throw Error("Failed to delete");
 			toast.success("Note deleted");
 			router.refresh(); // re-fetches home page server data
-		} catch (error) {
+		} catch {
 			toast.error("Failed to delete note");
-			throw error;
 		}
 	};
 
@@ -42,6 +41,7 @@ export default function NoteCard({ note }: NoteCardProps) {
 					<div className="flex items-start justify-between gap-2">
 						<h2 className="card-title text-lg line-clamp-1">{note.title}</h2>
 						<button
+							aria-label="Delete note"
 							type="button"
 							onClick={handleDelete}
 							className="btn btn-ghost btn-xs text-error"
@@ -49,9 +49,7 @@ export default function NoteCard({ note }: NoteCardProps) {
 							<Trash2Icon className="size-4" />
 						</button>
 					</div>
-					<p className="text-base-content/70 line-clamp-3 text-sm">
-						{note.content}
-					</p>
+					<p className="text-base-content/70 line-clamp-3 text-sm">{note.content}</p>
 					<div className="card-actions justify-end mt-2">
 						<span className="text-xs text-base-content/50">
 							{new Date(note.createdAt).toLocaleDateString()}
