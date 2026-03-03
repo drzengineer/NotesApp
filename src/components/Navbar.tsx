@@ -16,12 +16,12 @@ const Navbar = () => {
 					>
 						<defs>
 							<linearGradient id="logoGradFill" x1="0%" y1="0%" x2="100%" y2="100%">
-								<stop className="svg-brand-from" offset="0%" stop-color="#22d3dd" />
-								<stop className="svg-brand-to" offset="90%" stop-color="#135ffb" />
+								<stop className="svg-brand-from" offset="0%" stopColor="#22d3dd" />
+								<stop className="svg-brand-to" offset="90%" stopColor="#135ffb" />
 							</linearGradient>
 							<linearGradient id="botLogoFill" x1="0%" y1="0%" x2="100%" y2="100%">
-								<stop className="svg-brand-from" offset="40%" stop-color="#22d3dd" />
-								<stop className="svg-brand-to" offset="100%" stop-color="#135ffb" />
+								<stop className="svg-brand-from" offset="40%" stopColor="#22d3dd" />
+								<stop className="svg-brand-to" offset="100%" stopColor="#135ffb" />
 							</linearGradient>
 						</defs>
 						<path
