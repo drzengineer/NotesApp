@@ -41,7 +41,7 @@
 .border-gradient-blue-cyan {
 	background:
 		linear-gradient(to right, #151515, #171717),
-		linear-gradient(to right, #138fdb, #22c3ce);
+		linear-gradient(to right, #22c3ce,#138fdb);
 	background-clip: padding-box, border-box;
 	background-origin: padding-box, border-box;
 }
@@ -49,7 +49,7 @@
 .nav-border-gradient-blue-cyan {
 	background:
 		linear-gradient(to right, #110d0d, #110d0d),
-		linear-gradient(to right, #135feb, #22c3ce);
+		linear-gradient(to right, #22c3ce,#138fdb);
 	background-clip: padding-box, border-box;
 	background-origin: padding-box, border-box;
 }
@@ -57,7 +57,7 @@
 .btn-border-gradient-blue-cyan {
 	background:
 		linear-gradient(to right, #161616, #161616),
-		linear-gradient(to right, #135feb, #22c3ce);
+		linear-gradient(to right, #22c3ce,#138fdb);
 	background-clip: padding-box, border-box;
 	background-origin: padding-box, border-box;
 }

@@ -24,6 +24,7 @@ export default function CreatePage() {
 		}
 
 		setLoading(true);
+
 		try {
 			const res = await fetch("/api/notes", {
 				method: "POST",
@@ -65,7 +66,13 @@ export default function CreatePage() {
 							<form onSubmit={handleSubmit}>
 								<fieldset className="fieldset mb-4">
 									<legend className="fieldset-legend">Title</legend>
-									<input type="text" className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]" placeholder="Note Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+									<input
+										type="text"
+										className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]"
+										placeholder="Note Title"
+										value={title}
+										onChange={(e) => setTitle(e.target.value)}
+									/>
 								</fieldset>
 								<fieldset className="fieldset mb-4">
 									<legend className="fieldset-legend">Content</legend>
@@ -77,7 +84,11 @@ export default function CreatePage() {
 									/>
 								</fieldset>
 								<div className="card-actions justify-end">
-									<button type="submit" className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent" disabled={loading}>
+									<button
+										type="submit"
+										className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent"
+										disabled={loading}
+									>
 										{loading ? "Creating..." : "Create Note"}
 									</button>
 								</div>
