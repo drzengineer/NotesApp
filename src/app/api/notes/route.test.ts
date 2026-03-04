@@ -34,7 +34,7 @@ describe("GET /api/notes", () => {
 		expect(data[1]).toMatchObject({ _id: "2", title: "Note 2", content: "Content 2" });
 	});
 
-	it("should throw error with status 500", async () => {
+	it("should return status 500 on error", async () => {
 		jest.spyOn(Note, "find").mockReturnValue({
 			sort: jest.fn().mockRejectedValue(new Error("DB error")),
 		} as any);
@@ -64,7 +64,7 @@ describe("POST /api/notes", () => {
 		expect(data).toMatchObject({ title: "New Note", content: "New Content" });
 	});
 
-	it("should throw error with status 500", async () => {
+	it("should return status 500 on error", async () => {
 		jest.spyOn(Note.prototype, "save").mockRejectedValue(new Error("DB error"));
 		const res = await POST(
 			new Request("http://localhost:3000/api/notes", {
