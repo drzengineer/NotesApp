@@ -35,12 +35,13 @@ export default function NoteCard({ note }: NoteCardProps) {
 	};
 
 	return (
-		<Link href={`/notes/${note._id}`}>
+		<Link data-testid="note-card" href={`/notes/${note._id}`}>
 			<div className="card hover:shadow-lg transition-all duration-200 border-y border-gradient-blue-cyan border-transparent">
 				<div className="card-body">
 					<div className="flex items-start justify-between gap-2">
 						<h2 className="card-title text-lg line-clamp-1">{note.title}</h2>
 						<button
+							data-testid="delete-button"
 							aria-label="Delete note"
 							type="button"
 							onClick={handleDelete}

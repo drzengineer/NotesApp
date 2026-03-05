@@ -6,6 +6,7 @@ const WINDOW_MS = 10000;
 const MAX_REQUESTS = 10;
 
 export function proxy(request: NextRequest) {
+	if (process.env.NEXT_PUBLIC_IS_TEST === "true") return NextResponse.next();
 	const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
 	const now = Date.now();
 

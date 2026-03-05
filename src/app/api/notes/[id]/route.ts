@@ -23,7 +23,11 @@ export async function PUT(req: NextRequest, { params }: Params) {
 		await connectDB();
 		const { id } = await params;
 		const { title, content } = await req.json();
-		const updatedNote = await Note.findByIdAndUpdate(id, { title, content }, { new: true });
+		const updatedNote = await Note.findByIdAndUpdate(
+			id,
+			{ title, content },
+			{ returnDocument: "after" },
+		);
 		if (!updatedNote) return NextResponse.json({ message: "Note not found" }, { status: 404 });
 		revalidatePath("/", "layout");
 		return NextResponse.json(updatedNote, { status: 200 });

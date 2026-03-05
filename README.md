@@ -1,32 +1,41 @@
-# 📝 Notes App
+# Notes App
 
-A full-stack notes application built with **Next.js 16 App Router**, featuring server-side rendering, serverless API routes, and cloud deployment on AWS.
+A full-stack notes application built with Next.js 16 App Router, TypeScript, and MongoDB Atlas. Features a three-layer test suite with Playwright E2E tests running across three browsers via GitHub Actions CI.
 
-🔗 **Live Demo:** [notes.davidr.io](https://notes.davidr.io) | 👤 **Portfolio:** [davidr.io](https://davidr.io)
-
----
-
-## Problem Solved
-
-Managing notes across devices typically requires either bulky desktop software or trusting a third-party service with your data. This app provides a fast, responsive, self-contained notes experience with persistent cloud storage and a clean UI that works across mobile, tablet, and desktop, deployed and accessible from anywhere.
+🔗 **Live:** [notes.davidr.io](https://notes.davidr.io) · **Portfolio:** [davidr.io](https://davidr.io)
 
 ---
 
-## Features
+## Tech Stack
 
-- ✅ Full **CRUD** operations, Create, Read, Update, Delete notes in real time
-- ✅ **Server Components**, homepage renders fresh data server-side on every request
-- ✅ **Responsive design**, works seamlessly on mobile, tablet, and desktop
-- ✅ **Cloud database**, MongoDB Atlas with automatic backups and high availability
-- ✅ **Production deployment**, live on AWS Amplify with automated CI/CD
-- ✅ **Rate limiting**, request throttling via Next.js proxy middleware
-- ✅ **TypeScript**, strict mode end-to-end
-- 🔧 **Authentication**, NextAuth integration in active development
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router, SSR, API Routes) |
+| Language | TypeScript (strict mode) |
+| Database | MongoDB Atlas, Mongoose ODM |
+| Styling | Tailwind CSS v4, DaisyUI v5 |
+| Testing | Jest, React Testing Library, Playwright |
+| Deployment | AWS Amplify (SSR), custom domain |
+| CI/CD | GitHub Actions — runs full Playwright suite on every push |
+| Security | Rate limiting via proxy middleware, environment secrets |
+
+---
+
+## Testing
+
+Three-layer test strategy:
+
+- **Unit** — pure functions and middleware (Jest)
+- **Integration** — API routes against a live isolated MongoDB Atlas test database via `.env.test` (Jest)
+- **E2E** — 33+ user flows across Chromium, Firefox, and WebKit (Playwright, `fullyParallel: true`)
+
+E2E tests cover CRUD operations, validation errors, dialog handling, navigation, and special character edge cases. Tests use UUID-generated data and `beforeEach`/`afterEach` hooks for isolation. Traces enabled for CI failure debugging.
+
+GitHub Actions runs the full suite against a production build (`npm run build && npm run start`) on every push.
 
 ---
 
 ## Architecture
-
 ```
 ┌─────────────────────────────────────────┐
 │           Next.js 16 App Router         │
@@ -45,138 +54,88 @@ Managing notes across devices typically requires either bulky desktop software o
           │    MongoDB Atlas     │
           │  (Cloud Database)    │
           └──────────────────────┘
-
-Deployment: AWS Amplify (SSR)
-CI/CD: Auto-deploy on push to main
 ```
 
 ---
 
-## Tech Stack
+## API Reference
 
-| Layer      | Technology                                              |
-|------------|---------------------------------------------------------|
-| Framework  | Next.js 16 (App Router, SSR)                            |
-| Language   | TypeScript (strict mode)                                |
-| Styling    | Tailwind CSS v4, DaisyUI v5                             |
-| Database   | MongoDB Atlas, Mongoose ODM                             |
-| Deployment | AWS Amplify (SSR), custom domain                        |
-| DevOps     | Git, GitHub, CI/CD via Amplify + GitHub integration     |
-| Security   | Rate limiting via proxy middleware, environment secrets  |
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/notes` | Retrieve all notes |
+| `GET` | `/api/notes/[id]` | Retrieve a single note |
+| `POST` | `/api/notes` | Create a note |
+| `PUT` | `/api/notes/[id]` | Update a note |
+| `DELETE` | `/api/notes/[id]` | Delete a note |
 
 ---
 
-## API Endpoints
-
-| Method   | Endpoint          | Description             |
-|----------|-------------------|-------------------------|
-| `GET`    | `/api/notes`      | Retrieve all notes      |
-| `GET`    | `/api/notes/[id]` | Retrieve a single note  |
-| `POST`   | `/api/notes`      | Create a new note       |
-| `PUT`    | `/api/notes/[id]` | Update an existing note |
-| `DELETE` | `/api/notes/[id]` | Delete a note           |
+## Project Structure
+```
+NotesApp/
+├── .github/                          # GitHub Actions workflows
+├── e2e/
+│   └── notes.spec.ts                 # Playwright E2E tests
+├── src/
+│   ├── app/
+│   │   ├── api/notes/
+│   │   │   ├── route.ts              # GET all, POST
+│   │   │   ├── route.test.ts         # unit tests
+│   │   │   ├── route.integration.test.ts
+│   │   │   └── [id]/
+│   │   │       ├── route.ts          # GET one, PUT, DELETE
+│   │   │       ├── route.test.ts     # unit tests
+│   │   │       └── route.integration.test.ts
+│   │   ├── create/page.tsx
+│   │   ├── notes/[id]/page.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx                  # Homepage (Server Component)
+│   ├── components/
+│   │   ├── Navbar.tsx / Navbar.test.tsx
+│   │   ├── NoteCard.tsx / NoteCard.test.tsx
+│   │   └── NotesNotFound.tsx / NotesNotFound.test.tsx
+│   ├── utils/
+│   │   ├── validators.ts / validators.test.ts
+│   │   └── formatNote.ts / formatNote.test.ts
+│   ├── proxy.ts                      # Rate limiting middleware
+│   └── proxy.test.ts
+├── jest.config.ts
+├── jest.setup.ts
+├── jest.integration.setup.ts
+├── playwright.config.ts
+└── amplify.yml
+```
 
 ---
 
-## Setup Instructions
-
-### Prerequisites
-
-- Node.js v20+
-- MongoDB Atlas account (or local MongoDB)
-- npm
-
-### Clone & Install
-
+## Local Setup
 ```bash
 git clone https://github.com/drzengineer/NotesApp.git
 cd NotesApp
 npm install
 ```
 
-### Environment Variables
-
-Create a `.env.local` file at the project root:
-
+Create `.env.local`:
 ```env
 MONGO_URI=your_mongodb_atlas_connection_string
 ```
-
-### Run Locally
-
 ```bash
-npm run dev
-```
-
-App runs on `http://localhost:3000`.
-
-### Build for Production
-
-```bash
-npm run build
-npm start
-```
-
----
-
-## Project Structure
-
-```
-NotesApp/
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   └── notes/
-│   │   │       ├── route.ts         # GET all, POST
-│   │   │       └── [id]/route.ts    # GET one, PUT, DELETE
-│   │   ├── create/
-│   │   │   └── page.tsx             # Create note page
-│   │   ├── notes/
-│   │   │   └── [id]/page.tsx        # Note detail page
-│   │   ├── layout.tsx               # Root layout
-│   │   └── page.tsx                 # Homepage (Server Component)
-│   ├── components/                  # Shared UI components
-│   └── lib/
-│       ├── db.ts                    # Mongoose connection caching
-│       └── Note.ts                  # Note model + interface
-├── proxy.ts                         # Rate limiting middleware
-├── amplify.yml                      # AWS Amplify build config
-├── next.config.ts
-└── tsconfig.json
+npm run dev          # development
+npm run build        # production build
+npm test             # all Jest tests
+npm run test:u       # unit tests only
+npm run test:i       # integration tests only
+npm run test:e2e     # Playwright E2E
 ```
 
 ---
 
 ## Deployment
 
-Deployed on **AWS Amplify**:
-
-- **Framework** → Next.js 16 App Router (SSR + API Routes)
-- **Database** → MongoDB Atlas (cloud-hosted)
-- **CI/CD** → Auto-deploys on push to `main` via GitHub integration
-- **Config** → `amplify.yml` in repo root defines build pipeline
-- **Secrets** → `MONGO_URI` managed via Amplify environment variables
-
----
-
-## Roadmap
-
-- [x] CRUD operations
-- [x] Next.js 16 App Router migration (from Vite + Express)
-- [x] AWS Amplify deployment with SSR
-- [x] Automated CI/CD pipeline
-- [x] Rate limiting middleware
-- [x] TypeScript strict mode
-- [ ] NextAuth authentication
-- [ ] Jest unit + integration tests
-- [ ] Docker containerization
-- [ ] GitHub Actions CI pipeline
-- [ ] Redis caching
+Deployed on AWS Amplify with SSR. `MONGO_URI` managed via Amplify environment variables. Auto-deploys on push to `main`.
 
 ---
 
 ## Author
 
-**David Rodriguez** — Software Developer
-
-[davidr.io](https://davidr.io) | [LinkedIn](https://linkedin.com/in/drzengineer) | [GitHub](https://github.com/drzengineer)
+**David Rodriguez** — [davidr.io](https://davidr.io) · [LinkedIn](https://linkedin.com/in/drzengineer) · [GitHub](https://github.com/drzengineer)

@@ -57,7 +57,7 @@ export default function NoteDetailPage() {
 			toast.success("Note deleted successfully");
 			router.push("/");
 			router.push("/");
-			setTimeout(() => router.refresh(), 100);
+			// setTimeout(() => router.refresh(), 100);
 		} catch (error) {
 			console.error("Error deleting note:", error);
 			toast.error("Failed to delete note");
@@ -89,7 +89,6 @@ export default function NoteDetailPage() {
 			if (!res.ok) throw new Error("Failed to save note");
 			toast.success("Note updated successfully");
 			router.push("/");
-			router.push("/");
 			setTimeout(() => router.refresh(), 100);
 		} catch (error) {
 			console.error("Error updating note:", error);
@@ -110,15 +109,20 @@ export default function NoteDetailPage() {
 	if (!note) return null;
 
 	return (
-		<div className="min-h-screen relative bg-base-300">
+		<div data-testid="selected-note" className="min-h-screen relative bg-base-300">
 			<div className="container mx-auto px-4 py-8">
 				<div className="max-w-2xl mx-auto">
 					<div className="flex items-center justify-between mb-6">
-						<Link href="/" className="btn btn-ghost">
+						<Link data-testid="back-button" href="/" className="btn btn-ghost">
 							<ArrowLeftIcon className="size-5" />
 							Back to Notes
 						</Link>
-						<button type="button" onClick={handleDelete} className="btn btn-error btn-outline">
+						<button
+							data-testid="delete-button"
+							type="button"
+							onClick={handleDelete}
+							className="btn btn-error btn-outline"
+						>
 							<Trash2Icon className="size-5" />
 							Delete Note
 						</button>
@@ -128,6 +132,7 @@ export default function NoteDetailPage() {
 							<fieldset className="fieldset mb-4">
 								<legend className="fieldset-legend">Title</legend>
 								<input
+									data-testid="title-input"
 									type="text"
 									placeholder="Note title"
 									className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]"
@@ -138,6 +143,7 @@ export default function NoteDetailPage() {
 							<fieldset className="fieldset mb-4">
 								<legend className="fieldset-legend">Content</legend>
 								<textarea
+									data-testid="content-input"
 									placeholder="Write your note here..."
 									className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#151515] to-[#171717]"
 									value={note.content}
@@ -145,7 +151,13 @@ export default function NoteDetailPage() {
 								/>
 							</fieldset>
 							<div className="card-actions justify-end">
-								<button type="button" className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent" disabled={saving} onClick={handleSave}>
+								<button
+									data-testid="create-note-button"
+									type="button"
+									className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent"
+									disabled={saving}
+									onClick={handleSave}
+								>
 									{saving ? "Saving..." : "Save Changes"}
 								</button>
 							</div>
