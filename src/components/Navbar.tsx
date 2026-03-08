@@ -1,7 +1,11 @@
-import { PlusIcon } from "lucide-react";
+"use client";
+import { LogOutIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
+	const { data: session, status } = useSession();
+
 	return (
 		<header data-testid="navBar" className="bg-base-300 border-b border-base-content/10">
 			<div className="mx-auto max-w-6xl p-4">
@@ -35,17 +39,38 @@ const Navbar = () => {
 						/>
 					</svg>
 					<div className="flex items-center gap-4">
-						<Link
-							href={"/create"}
-							className="btn border-3 border-solid nav-border-gradient-blue-cyan border-transparent"
-						>
-							<PlusIcon className="size-5" />
-							<span>New Note</span>
-						</Link>
+						{status === "loading" && (
+							<div className="flex items-center gap-4">
+								{/* skeleton placeholders maintain layout during load */}
+								<div className="skeleton h-8 w-24 rounded" />
+								<div className="skeleton h-8 w-20 rounded" />
+							</div>
+						)}
+						{status === "authenticated" && (
+							<>
+								<span className="text-sm text-base-content/70">Hi, {session.user?.name}</span>
+								<Link
+									href={"/create"}
+									className="btn border-3 border-solid nav-border-gradient-blue-cyan border-transparent"
+								>
+									<PlusIcon className="size-5" />
+									<span>New Note</span>
+								</Link>
+								<button
+									type="button"
+									onClick={() => signOut()}
+									className="btn btn-ghost px-0"
+									title="Sign Out"
+								>
+									<LogOutIcon className="size-5" />
+								</button>
+							</>
+						)}
 					</div>
 				</div>
 			</div>
 		</header>
 	);
 };
+
 export default Navbar;

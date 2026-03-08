@@ -15,7 +15,7 @@ if (!cached) {
 	cached = global._mongoose = { conn: null, promise: null };
 }
 
-export async function connectDB() {
+export default async function connectDB() {
 	if (!MONGO_URI) {
 		throw new Error("Please define the MONGO_URI environment variable in .env.local");
 	}
