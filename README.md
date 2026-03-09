@@ -16,7 +16,7 @@ A full-stack notes application built with Next.js 16 App Router, TypeScript, and
 | Database | MongoDB Atlas, Mongoose ODM |
 | Styling | Tailwind CSS v4, DaisyUI v5 |
 | Testing | Jest, React Testing Library, Playwright |
-| Deployment | AWS Amplify (SSR), custom domain |
+| Deployment | AWS Amplify, custom domain |
 | CI/CD | GitHub Actions — runs full Playwright suite on every push |
 | Security | Per-IP rate limiting middleware, route protection, environment secrets |
 
@@ -46,33 +46,36 @@ E2E tests cover CRUD operations, validation errors, dialog handling, navigation,
 
 ## Architecture
 ```
-┌─────────────────────────────────────────────┐
-│             Next.js 16 App Router           │
-│                                             │
-│  ┌─────────────────┐   ┌──────────────────┐ │
-│  │ Server Components│   │   API Routes     │ │
-│  │   (SSR pages)   │   │   /api/notes     │ │
-│  └────────┬────────┘   └────────┬─────────┘ │
-│           │                     │           │
-│           └──────────┬──────────┘           │
-│                      │                      │
-│               Mongoose ODM                  │
-│                                             │
-│  ┌──────────────────────────────────────┐   │
-│  │         NextAuth v5 (Auth Layer)     │   │
-│  │   Google OAuth · GitHub OAuth · JWT  │   │
-│  └──────────────────────────────────────┘   │
-│                                             │
-│  ┌──────────────────────────────────────┐   │
-│  │       Middleware (proxy.ts)          │   │
-│  │   Route Protection · Rate Limiting   │   │
-│  └──────────────────────────────────────┘   │
-└─────────────────────────┬───────────────────┘
-                          │
-             ┌────────────▼────────────┐
-             │      MongoDB Atlas      │
-             │   Notes · Auth Data     │
-             └─────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│               Next.js 16 App Router             │
+│                                                 │
+│  ┌──────────────────┐   ┌─────────────────────┐ │
+│  │ Server Components│   │     API Routes      │ │
+│  │   (SSR pages)    │   │  /api/notes         │ │
+│  └────────┬─────────┘   │  /api/auth/[...]    │ │
+│           │             └──────────┬──────────┘ │
+│           │                        │            │
+│           └───────────┬────────────┘            │
+│                       │                         │
+│              ┌────────▼────────┐                │
+│              │  Mongoose ODM   │                │
+│              └────────┬────────┘                │
+│                       │                         │
+│  ┌────────────────────▼────────────────────┐    │
+│  │            NextAuth v5                  │    │
+│  │   Google OAuth · GitHub OAuth · JWT     │    │
+│  └────────────────────┬────────────────────┘    │
+│                       │                         │
+│  ┌────────────────────▼────────────────────┐    │
+│  │          Middleware (proxy.ts)          │    │
+│  │    Route Protection · Rate Limiting     │    │
+│  └────────────────────┬────────────────────┘    │
+└───────────────────────┼─────────────────────────┘
+                        │
+           ┌────────────▼────────────┐
+           │      MongoDB Atlas      │
+           │   Notes · Auth Data     │
+           └─────────────────────────┘
 ```
 
 ---
@@ -92,37 +95,58 @@ E2E tests cover CRUD operations, validation errors, dialog handling, navigation,
 ## Project Structure
 ```
 NotesApp/
-├── .github/                          # GitHub Actions workflows
+├── .github/
+│   └── workflows/
+│       └── playwright.yml
 ├── e2e/
-│   └── notes.spec.ts                 # Playwright E2E tests
+│   ├── global-setup.ts
+│   └── notes.spec.ts
 ├── src/
 │   ├── app/
-│   │   ├── api/notes/
-│   │   │   ├── route.ts              # GET all, POST
-│   │   │   ├── route.test.ts
-│   │   │   ├── route.integration.test.ts
-│   │   │   └── [id]/
-│   │   │       ├── route.ts          # GET one, PUT, DELETE
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   └── [...nextauth]/
+│   │   │   │       └── route.ts
+│   │   │   └── notes/
+│   │   │       ├── route.ts
 │   │   │       ├── route.test.ts
-│   │   │       └── route.integration.test.ts
-│   │   ├── create/page.tsx
-│   │   ├── notes/[id]/page.tsx
+│   │   │       ├── route.integration.test.ts
+│   │   │       └── [id]/
+│   │   │           ├── route.ts
+│   │   │           ├── route.test.ts
+│   │   │           └── route.integration.test.ts
+│   │   ├── create/
+│   │   │   └── page.tsx
+│   │   ├── notes/
+│   │   │   └── [id]/
+│   │   │       └── page.tsx
+│   │   ├── globals.css
+│   │   ├── icon.svg
 │   │   ├── layout.tsx
-│   │   └── page.tsx                  # Homepage (Server Component)
+│   │   └── page.tsx
 │   ├── components/
 │   │   ├── Navbar.tsx / Navbar.test.tsx
 │   │   ├── NoteCard.tsx / NoteCard.test.tsx
-│   │   └── NotesNotFound.tsx / NotesNotFound.test.tsx
+│   │   ├── NotesNotFound.tsx / NotesNotFound.test.tsx
+│   │   ├── SessionWrapper.tsx
+│   │   └── SignInPrompt.tsx
+│   ├── lib/
+│   │   ├── db.ts
+│   │   └── Note.ts
 │   ├── utils/
 │   │   ├── validators.ts / validators.test.ts
 │   │   └── formatNote.ts / formatNote.test.ts
-│   ├── proxy.ts                      # Rate limiting middleware
-│   └── proxy.test.ts
+│   ├── auth.ts
+│   └── proxy.ts
+├── .dockerignore
+├── amplify.yml
+├── Dockerfile
 ├── jest.config.ts
-├── jest.setup.ts
 ├── jest.integration.setup.ts
+├── jest.setup.ts
+├── next.config.ts
 ├── playwright.config.ts
-└── amplify.yml
+└── tsconfig.json
 ```
 
 ---
@@ -157,7 +181,7 @@ npm run test:e2e     # Playwright E2E
 
 ## Deployment
 
-Deployed on AWS Amplify with SSR. Environment variables managed via Amplify console. Auto-deploys on push to `main`.
+Deployed on AWS Amplify with a custom domain. Environment variables managed via Amplify console. Auto-deploys on push to `main`.
 
 ---
 
