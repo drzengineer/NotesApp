@@ -65,7 +65,7 @@ export default function CreatePage() {
 								<input
 									data-testid="title-input"
 									type="text"
-									className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]"
+									className="input w-auto bg-linear-to-r from-[#131313] to-[#151515] focus:outline-none"
 									placeholder="Note Title"
 									value={title}
 									onChange={(e) => setTitle(e.target.value)}
@@ -76,7 +76,7 @@ export default function CreatePage() {
 								<textarea
 									data-testid="content-input"
 									placeholder="Write your note here..."
-									className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#151515] to-[#171717]"
+									className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#131313] to-[#151515] focus:outline-none"
 									value={content}
 									onChange={(e) => setContent(e.target.value)}
 								/>

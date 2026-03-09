@@ -7,24 +7,38 @@ declare global {
 	};
 }
 
-const MONGO_URI =
-	process.env.NEXT_PUBLIC_IS_TEST === "true" ? process.env.TEST_MONGO_URI : process.env.MONGO_URI;
+// Evaluated inside the function so env vars are always fresh
+function getMongoURI(): string {
+	const uri = process.env.IS_TEST === "true" ? process.env.TEST_MONGO_URI : process.env.MONGO_URI;
 
-let cached = global._mongoose;
-
-if (!cached) {
-	cached = global._mongoose = { conn: null, promise: null };
-}
-
-export default async function connectDB() {
-	if (!MONGO_URI) {
-		throw new Error("Please define the MONGO_URI environment variable in .env.local");
+	if (!uri) {
+		throw new Error(
+			process.env.IS_TEST === "true" ? "TEST_MONGO_URI is not defined" : "MONGO_URI is not defined",
+		);
 	}
 
+	return uri;
+}
+
+if (!global._mongoose) {
+	global._mongoose = { conn: null, promise: null };
+}
+
+const cached = global._mongoose;
+
+export default async function connectDB(): Promise<typeof mongoose> {
 	if (cached.conn) return cached.conn;
 
 	if (!cached.promise) {
-		cached.promise = mongoose.connect(MONGO_URI).then((mongoose) => mongoose);
+		cached.promise = mongoose
+			.connect(getMongoURI(), {
+				bufferCommands: false, // fail fast instead of silently queuing
+			})
+			.catch((err) => {
+				// Clear the cached promise so the next call retries
+				cached.promise = null;
+				throw err;
+			});
 	}
 
 	cached.conn = await cached.promise;

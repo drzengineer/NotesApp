@@ -133,7 +133,7 @@ export default function NoteDetailPage() {
 									data-testid="title-input"
 									type="text"
 									placeholder="Note title"
-									className="input w-auto bg-linear-to-r from-[#151515] to-[#171717]"
+									className="input w-auto bg-linear-to-r from-[#131313] to-[#151515] focus:outline-none"
 									value={note.title}
 									onChange={(e) => setNote({ ...note, title: e.target.value })}
 								/>
@@ -143,7 +143,7 @@ export default function NoteDetailPage() {
 								<textarea
 									data-testid="content-input"
 									placeholder="Write your note here..."
-									className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#151515] to-[#171717]"
+									className="textarea textarea-bordered h-32 w-auto bg-linear-to-r from-[#131313] to-[#151515] focus:outline-none"
 									value={note.content}
 									onChange={(e) => setNote({ ...note, content: e.target.value })}
 								/>
