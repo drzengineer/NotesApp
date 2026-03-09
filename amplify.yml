@@ -7,6 +7,13 @@ frontend:
     build:
       commands:
         - echo "MONGO_URI=$MONGO_URI" >> .env.production
+        - echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production
+        - echo "AUTH_TRUST_HOST=$AUTH_TRUST_HOST" >> .env.production
+        - echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env.production
+        - echo "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" >> .env.production
+        - echo "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" >> .env.production
+        - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env.production
+        - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
