@@ -34,6 +34,7 @@ export default defineConfig({
 		reuseExistingServer: false,
 		env: {
 			NEXT_PUBLIC_IS_TEST: "true",
+			MONGO_URI: process.env.TEST_MONGO_URI ?? "",
 		},
 	},
 });
