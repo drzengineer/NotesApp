@@ -12,12 +12,12 @@ A full-stack notes application built with Next.js 16 App Router, TypeScript, and
 |---|---|
 | Framework | Next.js 16 (App Router, SSR, API Routes) |
 | Language | TypeScript (strict mode) |
-| Auth | NextAuth v5 — Google & GitHub OAuth, JWT sessions, MongoDB Adapter |
+| Auth | NextAuth v5, Google & GitHub OAuth, JWT sessions, MongoDB Adapter |
 | Database | MongoDB Atlas, Mongoose ODM |
 | Styling | Tailwind CSS v4, DaisyUI v5 |
 | Testing | Jest, React Testing Library, Playwright |
 | Deployment | AWS Amplify, custom domain |
-| CI/CD | GitHub Actions — runs full Playwright suite on every push |
+| CI/CD | GitHub Actions, runs full Playwright suite on every push |
 | Security | Per-IP rate limiting middleware, route protection, environment secrets |
 
 ---
