@@ -14,6 +14,7 @@ jobs:
       AUTH_TRUST_HOST: "true"
       NEXTAUTH_URL: "http://localhost:3000"
       MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
+      TEST_MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
 
     steps:
       - uses: actions/checkout@v4
