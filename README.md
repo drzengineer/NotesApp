@@ -26,8 +26,8 @@ A full-stack notes application built with Next.js 16 App Router, TypeScript, and
 
 - Google and GitHub OAuth via NextAuth v5
 - JWT session strategy with stable user IDs via MongoDB adapter
-- Every note is tied to an authenticated owner — notes are private per user
-- Cross-provider account linking via shared email — authenticate with either provider and access the same account
+- Every note is tied to an authenticated owner, notes are private per user
+- Cross-provider account linking via shared email, authenticate with either provider and access the same account
 - All authenticated routes protected via Next.js middleware
 
 ---
