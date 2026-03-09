@@ -4,9 +4,26 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-// MongoClient for the adapter — connect() is called so the adapter works correctly.
-const client = new MongoClient(process.env.MONGO_URI as string);
-const clientPromise = client.connect();
+if (!process.env.MONGO_URI) {
+	throw new Error("MONGO_URI is not defined");
+}
+
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
+
+if (process.env.NODE_ENV === "development") {
+	const globalWithMongo = global as typeof globalThis & {
+		_mongoClientPromise?: Promise<MongoClient>;
+	};
+	if (!globalWithMongo._mongoClientPromise) {
+		client = new MongoClient(process.env.MONGO_URI);
+		globalWithMongo._mongoClientPromise = client.connect();
+	}
+	clientPromise = globalWithMongo._mongoClientPromise;
+} else {
+	client = new MongoClient(process.env.MONGO_URI);
+	clientPromise = client.connect();
+}
 
 declare module "next-auth" {
 	interface Session {
@@ -29,6 +46,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 			clientId: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
 			allowDangerousEmailAccountLinking: true,
+			checks: ["state"],
 		}),
 		Google({
 			clientId: process.env.GOOGLE_CLIENT_ID,
