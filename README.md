@@ -38,7 +38,7 @@ Three-layer test strategy:
 
 - **Unit** —         pure functions and middleware (Jest)
 - **Integration** —  API routes against a live isolated MongoDB Atlas test database via `.env.test` (Jest)
-- **E2E** —          33+ user flows across Chromium, Firefox, and WebKit (Playwright)
+- **E2E** —          50+ user flows across Chromium, Firefox, and WebKit (Playwright)
 
 E2E tests cover CRUD operations, validation errors, dialog handling, navigation, and special character edge cases. GitHub Actions runs the full suite against a production build (`npm run build && npm run start`) on every push.
 
