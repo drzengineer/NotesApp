@@ -1,6 +1,6 @@
 # Notes App
 
-A full-stack notes application built with Next.js 16 App Router, TypeScript, and MongoDB Atlas. Features a three-layer test suite with Playwright E2E tests running across three browsers via GitHub Actions CI.
+A full-stack notes application built with Next.js 16 App Router, TypeScript, and MongoDB Atlas. Features Google and GitHub OAuth, per-user note ownership, and a three-layer test suite with Playwright E2E tests running across three browsers via GitHub Actions CI.
 
 🔗 **Live:** [notes.davidr.io](https://notes.davidr.io) · **Portfolio:** [davidr.io](https://davidr.io)
 
@@ -12,12 +12,23 @@ A full-stack notes application built with Next.js 16 App Router, TypeScript, and
 |---|---|
 | Framework | Next.js 16 (App Router, SSR, API Routes) |
 | Language | TypeScript (strict mode) |
+| Auth | NextAuth v5 — Google & GitHub OAuth, JWT sessions, MongoDB Adapter |
 | Database | MongoDB Atlas, Mongoose ODM |
 | Styling | Tailwind CSS v4, DaisyUI v5 |
 | Testing | Jest, React Testing Library, Playwright |
 | Deployment | AWS Amplify (SSR), custom domain |
 | CI/CD | GitHub Actions — runs full Playwright suite on every push |
-| Security | Rate limiting via proxy middleware, environment secrets |
+| Security | Per-IP rate limiting middleware, route protection, environment secrets |
+
+---
+
+## Authentication
+
+- Google and GitHub OAuth via NextAuth v5
+- JWT session strategy with stable user IDs via MongoDB adapter
+- Every note is tied to an authenticated owner — notes are private per user
+- Cross-provider account linking via shared email — authenticate with either provider and access the same account
+- All authenticated routes protected via Next.js middleware
 
 ---
 
@@ -27,33 +38,41 @@ Three-layer test strategy:
 
 - **Unit** — pure functions and middleware (Jest)
 - **Integration** — API routes against a live isolated MongoDB Atlas test database via `.env.test` (Jest)
-- **E2E** — 33+ user flows across Chromium, Firefox, and WebKit (Playwright, `fullyParallel: true`)
+- **E2E** — 33+ user flows across Chromium, Firefox, and WebKit (Playwright)
 
-E2E tests cover CRUD operations, validation errors, dialog handling, navigation, and special character edge cases. Tests use UUID-generated data and `beforeEach`/`afterEach` hooks for isolation. Traces enabled for CI failure debugging.
-
-GitHub Actions runs the full suite against a production build (`npm run build && npm run start`) on every push.
+E2E tests cover CRUD operations, validation errors, dialog handling, navigation, and special character edge cases. GitHub Actions runs the full suite against a production build (`npm run build && npm run start`) on every push.
 
 ---
 
 ## Architecture
 ```
-┌─────────────────────────────────────────┐
-│           Next.js 16 App Router         │
-│                                         │
-│  ┌──────────────────┐  ┌──────────────┐ │
-│  │ Server Components│  │  API Routes  │ │
-│  │  (SSR pages)     │  │  /api/notes  │ │
-│  └────────┬─────────┘  └──────┬───────┘ │
-│           │                   │         │
-│           └───────────────────┘         │
-│                    │                    │
-│             Mongoose ODM                │
-└────────────────────┼────────────────────┘
-                     │
-          ┌──────────▼───────────┐
-          │    MongoDB Atlas     │
-          │  (Cloud Database)    │
-          └──────────────────────┘
+┌─────────────────────────────────────────────┐
+│             Next.js 16 App Router           │
+│                                             │
+│  ┌─────────────────┐   ┌──────────────────┐ │
+│  │ Server Components│   │   API Routes     │ │
+│  │   (SSR pages)   │   │   /api/notes     │ │
+│  └────────┬────────┘   └────────┬─────────┘ │
+│           │                     │           │
+│           └──────────┬──────────┘           │
+│                      │                      │
+│               Mongoose ODM                  │
+│                                             │
+│  ┌──────────────────────────────────────┐   │
+│  │         NextAuth v5 (Auth Layer)     │   │
+│  │   Google OAuth · GitHub OAuth · JWT  │   │
+│  └──────────────────────────────────────┘   │
+│                                             │
+│  ┌──────────────────────────────────────┐   │
+│  │       Middleware (proxy.ts)          │   │
+│  │   Route Protection · Rate Limiting   │   │
+│  └──────────────────────────────────────┘   │
+└─────────────────────────┬───────────────────┘
+                          │
+             ┌────────────▼────────────┐
+             │      MongoDB Atlas      │
+             │   Notes · Auth Data     │
+             └─────────────────────────┘
 ```
 
 ---
@@ -62,7 +81,7 @@ GitHub Actions runs the full suite against a production build (`npm run build &&
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/notes` | Retrieve all notes |
+| `GET` | `/api/notes` | Retrieve all notes for authenticated user |
 | `GET` | `/api/notes/[id]` | Retrieve a single note |
 | `POST` | `/api/notes` | Create a note |
 | `PUT` | `/api/notes/[id]` | Update a note |
@@ -80,11 +99,11 @@ NotesApp/
 │   ├── app/
 │   │   ├── api/notes/
 │   │   │   ├── route.ts              # GET all, POST
-│   │   │   ├── route.test.ts         # unit tests
+│   │   │   ├── route.test.ts
 │   │   │   ├── route.integration.test.ts
 │   │   │   └── [id]/
 │   │   │       ├── route.ts          # GET one, PUT, DELETE
-│   │   │       ├── route.test.ts     # unit tests
+│   │   │       ├── route.test.ts
 │   │   │       └── route.integration.test.ts
 │   │   ├── create/page.tsx
 │   │   ├── notes/[id]/page.tsx
@@ -118,6 +137,12 @@ npm install
 Create `.env.local`:
 ```env
 MONGO_URI=your_mongodb_atlas_connection_string
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 ```
 ```bash
 npm run dev          # development
@@ -132,7 +157,7 @@ npm run test:e2e     # Playwright E2E
 
 ## Deployment
 
-Deployed on AWS Amplify with SSR. `MONGO_URI` managed via Amplify environment variables. Auto-deploys on push to `main`.
+Deployed on AWS Amplify with SSR. Environment variables managed via Amplify console. Auto-deploys on push to `main`.
 
 ---
 
