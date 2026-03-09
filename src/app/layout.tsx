@@ -12,14 +12,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en" data-theme="forest">
 			<body>
-				{/* The radial gradient background*/}
-				<div className="fixed inset-0 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#131313_60%,#135ffb70_100%)]" />
+				{/* z-0 ensures this never overlaps toasts or modals */}
+				<div className="fixed inset-0 z-0 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#131313_60%,#135ffb70_100%)]" />
 
 				<SessionWrapper>
 					<div className="relative h-full min-h-screen">{children}</div>
+					{/* Toaster inside SessionWrapper so it shares the stacking context */}
+					<Toaster />
 				</SessionWrapper>
-
-				<Toaster />
 			</body>
 		</html>
 	);

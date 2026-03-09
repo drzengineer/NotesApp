@@ -3,9 +3,10 @@ import { formatNote } from "./formatNote";
 describe("formatNote", () => {
 	it("should convert numbers to strings and return an INote", () => {
 		const result = formatNote({
-			_id: "12345",
+			_id: 12345,
 			title: "the title",
 			content: "the content",
+			userId: "user_abc",
 			createdAt: 3883,
 			updatedAt: 4324,
 		});
@@ -13,8 +14,9 @@ describe("formatNote", () => {
 			_id: "12345",
 			title: "the title",
 			content: "the content",
-			createdAt: "3883",
-			updatedAt: "4324",
+			userId: "user_abc",
+			createdAt: new Date(3883),
+			updatedAt: new Date(4324),
 		});
 	});
 
@@ -23,6 +25,7 @@ describe("formatNote", () => {
 			_id: "758402y54bfn9r3of",
 			title: "the title",
 			content: "the content",
+			userId: "user_xyz",
 			createdAt: new Date("2024-01-15"),
 			updatedAt: new Date("2024-01-16"),
 		});
@@ -30,8 +33,9 @@ describe("formatNote", () => {
 			_id: "758402y54bfn9r3of",
 			title: "the title",
 			content: "the content",
-			createdAt: String(new Date("2024-01-15")),
-			updatedAt: String(new Date("2024-01-16")),
+			userId: "user_xyz",
+			createdAt: new Date("2024-01-15"),
+			updatedAt: new Date("2024-01-16"),
 		});
 	});
 });

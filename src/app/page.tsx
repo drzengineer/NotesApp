@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import NoteCard from "@/components/NoteCard";
 import NotesNotFound from "@/components/NotesNotFound";
 import SignInPrompt from "@/components/SignInPrompt";
-import dbConnect from "@/lib/db";
+import connectDB from "@/lib/db";
 import Note, { type INote } from "@/lib/Note";
 import { formatNote } from "@/utils/formatNote";
 
@@ -16,7 +16,7 @@ export default async function HomePage() {
 
 	if (session) {
 		try {
-			await dbConnect();
+			await connectDB();
 			const rawNotes = await Note.find({ userId: session.user.id })
 				.sort({ createdAt: -1 })
 				.lean<INote[]>();

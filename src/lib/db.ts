@@ -7,7 +7,8 @@ declare global {
 	};
 }
 
-const MONGO_URI = process.env.MONGO_URI || "";
+const MONGO_URI =
+	process.env.NEXT_PUBLIC_IS_TEST === "true" ? process.env.TEST_MONGO_URI : process.env.MONGO_URI;
 
 let cached = global._mongoose;
 

@@ -15,16 +15,12 @@ afterAll(async () => {
 
 beforeEach(async () => {
 	await mongoose.connection.dropDatabase();
+	jest.spyOn(console, "error").mockImplementation(() => {});
+	jest.spyOn(console, "warn").mockImplementation(() => {});
 });
 
 jest.mock("next/cache", () => ({
 	revalidatePath: jest.fn(),
 }));
 
-jest.mock("@/lib/db", () => ({
-	connectDB: jest.fn().mockResolvedValue(undefined),
-}));
-
-beforeEach(() => {
-	jest.spyOn(console, "error").mockImplementation(() => {});
-});
+jest.mock("@/lib/db", () => jest.fn().mockResolvedValue(undefined));

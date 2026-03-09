@@ -56,8 +56,6 @@ export default function NoteDetailPage() {
 			if (!res.ok) throw new Error("Failed to delete note");
 			toast.success("Note deleted successfully");
 			router.push("/");
-			router.push("/");
-			// setTimeout(() => router.refresh(), 100);
 		} catch (error) {
 			console.error("Error deleting note:", error);
 			toast.error("Failed to delete note");
@@ -152,7 +150,7 @@ export default function NoteDetailPage() {
 							</fieldset>
 							<div className="card-actions justify-end">
 								<button
-									data-testid="create-note-button"
+									data-testid="save-note-button"
 									type="button"
 									className="btn border-2 border-solid btn-border-gradient-blue-cyan border-transparent"
 									disabled={saving}

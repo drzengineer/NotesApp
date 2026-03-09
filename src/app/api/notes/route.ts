@@ -1,36 +1,39 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
+import connectDB from "@/lib/db";
 import Note from "@/lib/Note";
 
 export async function GET() {
-	const session = await auth(); // gets current session server side
+	try {
+		const session = await auth();
+		if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-	// middleware already blocks unauthenticated requests
-	// but we double check here as a second layer of defense
-	if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-	await dbConnect();
-
-	// only fetch notes belonging to this user — never expose other users' notes
-	const notes = await Note.find({ userId: session.user.id });
-	return NextResponse.json(notes);
+		await connectDB();
+		const notes = await Note.find({ userId: session.user.id });
+		return NextResponse.json(notes);
+	} catch (error) {
+		console.error(error);
+		return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+	}
 }
 
 export async function POST(request: Request) {
-	const session = await auth();
+	try {
+		const session = await auth();
+		if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-	if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		await connectDB();
+		const body = await request.json();
 
-	await dbConnect();
+		const note = await Note.create({
+			title: body.title,
+			content: body.content,
+			userId: session.user.id,
+		});
 
-	const body = await request.json();
-
-	const note = await Note.create({
-		title: body.title,
-		content: body.content,
-		userId: session.user.id, // ALWAYS from session, never from request body — prevents forgery
-	});
-
-	return NextResponse.json(note, { status: 201 });
+		return NextResponse.json(note, { status: 201 });
+	} catch (error) {
+		console.error(error);
+		return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+	}
 }

@@ -4,19 +4,17 @@ import { auth } from "@/auth";
 export const requests = new Map<string, { count: number; resetTime: number }>();
 
 const WINDOW_MS = 10000;
-const MAX_REQUESTS = 50;
+const MAX_REQUESTS = 20;
 
 const PROTECTED_ROUTES = ["/create", "/notes", "/api/notes"];
 
 export default auth((req) => {
-	// auth check runs first — redirect before rate limiting
 	const isProtected = PROTECTED_ROUTES.some((route) => req.nextUrl.pathname.startsWith(route));
 
 	if (isProtected && !req.auth) {
 		return NextResponse.redirect(new URL("/", req.url));
 	}
 
-	// skip rate limiting in test environment
 	if (process.env.NEXT_PUBLIC_IS_TEST === "true") return NextResponse.next();
 
 	const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
@@ -37,9 +35,5 @@ export default auth((req) => {
 });
 
 export const config = {
-	matcher: [
-		"/create",
-		"/notes/:path*",
-		"/api/:path*", // covers both rate limiting and auth for API routes
-	],
+	matcher: ["/create", "/notes/:path*", "/api/:path*"],
 };
