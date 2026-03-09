@@ -19,6 +19,7 @@ node_modules
 
 # Next.js
 .next/
+.swc/
 /next/out/
 /next/.next/
 
@@ -55,4 +56,4 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-/playwright/.auth/
+playwright-auth-state.json
